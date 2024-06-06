@@ -175,4 +175,30 @@ onMounted(() => {
     }
   }
 }
+@media (max-width: 1024px) {
+  body {
+    // font-size: 0.875rem;
+  }
+  .header {
+    // background-color: red;
+  }
+  .page {
+    // background-color: red;
+    display: grid;
+    grid-template-columns: 100vw;
+  }
+}
+@media (max-width: 600px) {
+  body {
+    // font-size: 0.875rem;
+  }
+  .header {
+    // background-color: red;
+  }
+  .page {
+    // background-color: red;
+    display: grid;
+    grid-template-columns: 100vw;
+  }
+}
 </style>

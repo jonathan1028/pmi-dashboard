@@ -15,12 +15,12 @@
   text-shadow: 0.2cqi 0.2cqi 0.1vh black;
 }
 
-@media (min-width: 1024px) {
-  body {
-    // font-size: 0.875rem;
-  }
-  .header {
-    // font-size: 5vw;
-  }
+@media (max-width: 1024px) {
+  //   body {
+  //     // font-size: 0.875rem;
+  //   }
+  //   .header {
+  //     background-color: red;
+  //   }
 }
 </style>
