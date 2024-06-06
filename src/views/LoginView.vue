@@ -14,7 +14,7 @@ const login = () => {
 
   if (email.value === hardcodedEmail && password.value === hardcodedPassword) {
     localStorage.setItem('user', JSON.stringify({ email: email.value }))
-    router.push('/processes')
+    router.push('/dashboard')
   } else {
     error.value = 'Invalid email or password'
   }

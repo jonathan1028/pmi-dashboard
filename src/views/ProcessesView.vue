@@ -139,15 +139,19 @@ onMounted(() => {
     grid-template-areas:
       'header header'
       'col1 col2';
+    font-size: 2cqi;
     .header {
       grid-area: header;
     }
     ul {
-      padding-left: 1.5vw;
+      padding-left: 5cqi;
+    }
+    .title {
+      font-size: 5cqi;
     }
     .col1 {
       grid-area: col1;
-      padding-left: 1vw;
+      padding: 2cqi 2cqi 2cqi 2cqi;
       border: 1px solid white;
       .processes-list {
         height: auto;
@@ -171,17 +175,11 @@ onMounted(() => {
     .col2 {
       grid-area: col2;
       border: 1px solid white;
-      padding-left: 1vw;
+      padding: 2cqi 2cqi 2cqi 2cqi;
     }
   }
 }
 @media (max-width: 1024px) {
-  body {
-    // font-size: 0.875rem;
-  }
-  .header {
-    // background-color: red;
-  }
   .page {
     // background-color: red;
     display: grid;
@@ -189,12 +187,6 @@ onMounted(() => {
   }
 }
 @media (max-width: 600px) {
-  body {
-    // font-size: 0.875rem;
-  }
-  .header {
-    // background-color: red;
-  }
   .page {
     // background-color: red;
     display: grid;
