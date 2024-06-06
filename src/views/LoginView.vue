@@ -1,5 +1,24 @@
 <script setup lang="ts">
 import Header from '../components/Header.vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const email = ref('')
+const password = ref('')
+const error = ref('')
+const router = useRouter()
+
+const login = () => {
+  const hardcodedEmail = 'dan@pmiaustin.net'
+  const hardcodedPassword = 'password'
+
+  if (email.value === hardcodedEmail && password.value === hardcodedPassword) {
+    localStorage.setItem('user', JSON.stringify({ email: email.value }))
+    router.push('/processes')
+  } else {
+    error.value = 'Invalid email or password'
+  }
+}
 </script>
 
 <template>
@@ -10,8 +29,18 @@ import Header from '../components/Header.vue'
       <div class="menu">
         <div class="login-card">
           <div class="title">Login</div>
-          <div>Username:</div>
-          <div>Password:</div>
+          <form @submit.prevent="login">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" v-model="email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" v-model="password" required />
+            </div>
+            <button type="submit">Login</button>
+            <p v-if="error">{{ error }}</p>
+          </form>
         </div>
       </div>
     </div>
@@ -37,18 +66,55 @@ import Header from '../components/Header.vue'
     padding: 10vh 15vw 10vh 15vw;
     .login-card {
       color: black;
-      padding-left: 2vw;
+      background-color: white;
+      padding: 3vh 3vw;
+
+      display: grid;
+      grid-template-rows: 5vh, 7vh, 7vh, 5vh;
+
+      font-size: 2vh;
+      filter: drop-shadow(10px 10px 4px black);
       .title {
         font-size: 4vh;
       }
-      display: grid;
-      grid-template-rows: 5vh, 5vh, 5vh;
-      height: 15vh;
-      background-color: white;
-      margin-bottom: 2vh;
-      font-size: 2vh;
-      filter: drop-shadow(10px 10px 4px black);
+      .form-group {
+        // display: grid;
+        // grid-template-columns: 1fr 1fr;
+        input {
+          width: 100%;
+          // padding: 8px;
+          box-sizing: border-box;
+          height: 3vh;
+        }
+        label {
+          display: block;
+          // margin-bottom: 5px;
+        }
+      }
+      button {
+        margin-top: 1vh;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
     }
+  }
+  .login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .form-group {
+    margin-bottom: 15px;
   }
 }
 </style>

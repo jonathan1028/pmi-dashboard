@@ -12,6 +12,7 @@ const router = createRouter({
     {
       path: '/processes',
       name: 'processes',
+      meta: { requiresAuth: true },
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -20,12 +21,22 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
+
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/LoginView.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('user')
+  if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router
