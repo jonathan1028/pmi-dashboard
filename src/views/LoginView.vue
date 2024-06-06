@@ -8,12 +8,11 @@ import TheWelcome from '../components/TheWelcome.vue'
     <div class="center-page">
       <div class="header">PMI Automations</div>
       <div class="menu">
-        <router-link to="/login">
-          <div class="menu-card">Login</div>
-        </router-link>
-        <router-link to="/processes">
-          <div class="menu-card">Processes</div>
-        </router-link>
+        <div class="login-card">
+          <div class="title">Login</div>
+          <div>Username:</div>
+          <div>Password:</div>
+        </div>
       </div>
     </div>
     <div class="right-sidebar"></div>
@@ -43,16 +42,19 @@ import TheWelcome from '../components/TheWelcome.vue'
     height: 80vh;
     border: 1px solid white;
     padding: 10vh 15vw 10vh 15vw;
-    .menu-card {
-      display: flex;
-      justify-content: center; /* Align horizontal */
-      align-items: center; /* Align vertical */
+    .login-card {
+      color: black;
+      padding-left: 2vw;
+      .title {
+        font-size: 4vh;
+      }
+      display: grid;
+      grid-template-rows: 5vh, 5vh, 5vh;
       height: 15vh;
-      background-color: blue;
+      background-color: white;
       margin-bottom: 2vh;
-      font-size: 4vh;
+      font-size: 2vh;
       filter: drop-shadow(10px 10px 4px black);
-      text-shadow: 0.3vh 0.3vh 0.1vh black;
     }
   }
 }
