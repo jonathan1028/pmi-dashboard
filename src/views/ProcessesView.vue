@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import Header from '../components/Header.vue'
 import axios from 'axios'
+
 import { ref, onMounted } from 'vue'
+
+// API Key = ad483b306b444b129dbdbecba032eb3c
+// API Secret = 318df8d429504414a90217a92d68a85f
 
 const list1 = [
   'View property condition',
@@ -44,8 +48,36 @@ const list6 = ['Data entry', 'Property inspection and documentation']
 const items = ref([])
 
 const fetchData = async () => {
+  const accessKey = import.meta.env.VITE_RENTVINE_ACCESS_KEY
+  const secretKey = import.meta.env.VITE_RENTVINE_SECRET_KEY
+  const apiURL = 'https://pmiaustin.rentvine.com/api/manager/owners/search'
+
   try {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/users')
+    //const response = await axios.get('https://pmiaustin.rentvine.com/api/manager/owners/search')
+    // const response = await axios.get('https://jsonplaceholder.typicode.com/users')
+    axios.interceptors.request.use(
+      function (config) {
+        // Do something before request is sent
+        console.log(config)
+        return config
+      },
+      function (error) {
+        // Do something with request error
+        return Promise.reject(error)
+      }
+    )
+
+    const response = await axios.get(apiURL, {
+      auth: {
+        username: accessKey,
+        password: secretKey
+      }
+    })
+
+    console.log('Status:', response.status)
+    console.log('Headers:', response.headers)
+    console.log('Response Data:', response.data)
+
     items.value = response.data
   } catch (error) {
     console.error('There was an error!', error)
@@ -112,7 +144,7 @@ onMounted(() => {
         <div class="test-output">
           <div class="list-header">API Data</div>
           <ul>
-            <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+            <li v-for="item in items" :key="item.id">{{ item }}</li>
           </ul>
         </div>
       </div>
