@@ -11,9 +11,9 @@ import Header from '../components/Header.vue'
         <router-link to="/login">
           <div class="menu-card">Login</div>
         </router-link>
-        <router-link to="/processes">
+        <!-- <router-link to="/processes">
           <div class="menu-card">Processes</div>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
     <div class="right-sidebar"></div>

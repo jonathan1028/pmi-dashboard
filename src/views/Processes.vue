@@ -43,8 +43,6 @@ const list6 = ['Data entry', 'Property inspection and documentation']
 
 // Define reactive properties
 const items = ref([])
-const filteredItems = ref([])
-const expiredLeases = ref([])
 
 // Create Axios instance
 const axiosInstance = axios.create({
@@ -77,7 +75,7 @@ axiosInstance.interceptors.response.use(
 const fetchData = async () => {
   const accessKey = import.meta.env.VITE_RENTVINE_ACCESS_KEY
   const secretKey = import.meta.env.VITE_RENTVINE_SECRET_KEY
-  const apiURL = '/api/manager/leases' // Use the proxy URL
+  const apiURL = '/api/manager/owners/search' // Use the proxy URL
 
   try {
     const response = await axiosInstance.get(apiURL, {
@@ -92,43 +90,9 @@ const fetchData = async () => {
 
     // Set the response data to the reactive property
     items.value = response.data
-    filterData()
-    filterExpiredLeases()
   } catch (error) {
     console.error('There was an error!', error)
   }
-}
-
-// Example start and end dates
-const startDate = new Date()
-const endDate = new Date()
-endDate.setDate(endDate.getDate() + 90)
-
-console.log('EndDate', endDate)
-
-// Filter data function
-const filterData = () => {
-  filteredItems.value = items.value.filter((item) => {
-    const itemDate = new Date(item.lease.endDate)
-    return itemDate >= startDate && itemDate <= endDate
-  })
-}
-
-// Filter data function
-const filterExpiredLeases = () => {
-  expiredLeases.value = items.value.filter((item) => {
-    const itemDate = new Date(item.lease.endDate)
-    // return itemDate >= startDate && itemDate <= endDate
-    return itemDate < startDate
-  })
-}
-
-// Create a reactive variable to track the button state
-const isClicked = ref(false)
-
-// Function to toggle the button state
-const toggleClick = () => {
-  isClicked.value = !isClicked.value
 }
 
 // Fetch data when the component is mounted
@@ -142,39 +106,57 @@ onMounted(() => {
     <div class="left-sidebar"></div>
     <div class="center-page">
       <Header class="header"></Header>
-      <div class="page-title">Dashboard</div>
       <div class="col1">
-        <div class="section-title">Leasing</div>
-        <div class="buttons-list">
-          <button
-            :class="{ 'is-clicked': isClicked, 'not-clicked': !isClicked }"
-            @click="toggleClick"
-          >
-            View Expiring Leases
-          </button>
+        <div class="title">Processes</div>
+        <div class="processes-list">
+          <div class="list-header">Leasing</div>
+          <ul>
+            <li v-for="(item, index) in list1" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Move-Ins</div>
+          <ul>
+            <li v-for="(item, index) in list2" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Move-Outs</div>
+          <ul>
+            <li v-for="(item, index) in list3" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Lease Renewals</div>
+          <ul>
+            <li v-for="(item, index) in list4" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Client Sales</div>
+          <ul>
+            <li v-for="(item, index) in list5" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Client Onboarding</div>
+          <ul>
+            <li v-for="(item, index) in list6" :key="index" class="item-{{index}}">
+              {{ item }}
+            </li>
+          </ul>
+          <div class="list-header">Reporting</div>
+          <div class="list-header">Maintenance</div>
         </div>
       </div>
 
       <div class="col2">
-        <div v-if="isClicked" class="col2-data">
-          <div class="title">Expiring in Next 90 Days</div>
-          <div class="test-output">
-            <!-- <div class="list-header">API Data</div> -->
-            <ol>
-              <li v-for="item in filteredItems" :key="item.id">
-                {{ item.unit.streetNumber }} {{ item.unit.streetName }} ({{ item.lease.endDate }})
-              </li>
-            </ol>
-          </div>
-          <div class="title2">Expired Leases</div>
-          <div class="test-output">
-            <!-- <div class="list-header">API Data</div> -->
-            <ol>
-              <li v-for="item in expiredLeases" :key="item.id">
-                {{ item.unit.streetNumber }} {{ item.unit.streetName }} ({{ item.lease.endDate }})
-              </li>
-            </ol>
-          </div>
+        <div class="title">Test Output</div>
+        <div class="test-output">
+          <div class="list-header">API Data</div>
+          <ul>
+            <li v-for="item in items" :key="item.id">{{ item }}</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -185,61 +167,41 @@ onMounted(() => {
 <style lang="scss">
 .page {
   width: 100vw;
-  min-height: 100vh;
-  height: fit-content;
+  height: auto;
   display: grid;
   grid-template-columns: 20vw 60vw 20vw;
   background-color: rgb(83, 82, 82);
   color: white;
-
+  .title {
+    font-size: 7vh;
+  }
   .center-page {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 20vh 10vh auto;
+    grid-template-columns: 30vw 30vw;
+    grid-template-rows: auto auto;
     grid-template-areas:
       'header header'
-      'page-title page-title'
       'col1 col2';
     font-size: 2cqi;
     .header {
       grid-area: header;
     }
-
-    .page-title {
-      // display: flex;
-      grid-area: page-title;
-      font-size: 3cqi;
-      text-align: center;
-      // align-items: center;
-      margin: auto;
+    ul {
+      padding-left: 5cqi;
     }
-    .is-clicked {
-      background-color: lightblue;
-    }
-    .not-clicked {
-      background-color: white;
-    }
-    .buttons-list {
-      margin-left: 2cqi;
-    }
-    button {
-      padding: 0.5cqi;
-      border-radius: 0.5cqi;
-      font-size: 1.5cqi;
-      filter: drop-shadow(0.25cqi 0.25cqi 0.25cqi black);
-    }
-    button:hover {
-      border: 0.2cqi solid blue;
+    .title {
+      font-size: 5cqi;
     }
     .col1 {
       grid-area: col1;
       padding: 2cqi 2cqi 2cqi 2cqi;
       border: 1px solid white;
-      .section-title {
-        font-weight: 600;
-      }
       .processes-list {
         height: auto;
+
+        // padding: 10vh 15vw 10vh 15vw;
+        // padding: 2vh 2vw 2vh 2vw;
+
         .menu-card {
           display: flex;
           justify-content: center; /* Align horizontal */
@@ -257,23 +219,6 @@ onMounted(() => {
       grid-area: col2;
       border: 1px solid white;
       padding: 2cqi 2cqi 2cqi 2cqi;
-      font-size: 1.4cqi;
-      .title {
-        font-weight: 600;
-        font-size: 1.8cqi;
-      }
-      .title2 {
-        margin-top: 1cqi;
-        font-size: 1.8cqi;
-        font-weight: 600;
-      }
-
-      ol {
-        padding-left: 2.5cqi;
-      }
-      li {
-        font-weight: 200;
-      }
     }
   }
 }
@@ -282,12 +227,6 @@ onMounted(() => {
     // background-color: red;
     display: grid;
     grid-template-columns: 100vw;
-    .left-sidebar {
-      display: none;
-    }
-    .right-sidebar {
-      display: none;
-    }
   }
 }
 @media (max-width: 600px) {
