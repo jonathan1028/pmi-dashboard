@@ -77,10 +77,12 @@ axiosInstance.interceptors.response.use(
 const fetchData = async () => {
   const accessKey = import.meta.env.VITE_RENTVINE_ACCESS_KEY
   const secretKey = import.meta.env.VITE_RENTVINE_SECRET_KEY
+  const baseURL = import.meta.env.VITE_BASE_URL
   const apiURL = '/api/manager/leases' // Use the proxy URL
 
   try {
     const response = await axiosInstance.get(apiURL, {
+      baseURL: baseURL,
       auth: {
         username: accessKey,
         password: secretKey
