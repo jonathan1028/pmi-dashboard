@@ -9,10 +9,10 @@ const error = ref('')
 const router = useRouter()
 
 const login = () => {
-  const hardcodedEmail = 'dan@pmiaustin.net'
-  const hardcodedPassword = 'password'
+  const loginEmail = import.meta.env.VITE_LOGIN_EMAIL
+  const loginPassword = import.meta.env.VITE_LOGIN_PASSWORD
 
-  if (email.value === hardcodedEmail && password.value === hardcodedPassword) {
+  if (email.value === loginEmail && password.value === loginPassword) {
     localStorage.setItem('user', JSON.stringify({ email: email.value }))
     router.push('/dashboard')
   } else {

@@ -4,9 +4,6 @@ import axios from 'axios'
 
 import { ref, onMounted } from 'vue'
 
-// API Key = ad483b306b444b129dbdbecba032eb3c
-// API Secret = 318df8d429504414a90217a92d68a85f
-
 const list1 = [
   'View property condition',
   'Transfer utilities to manager',
@@ -47,27 +44,41 @@ const list6 = ['Data entry', 'Property inspection and documentation']
 // Define reactive properties
 const items = ref([])
 
+// Create Axios instance
+const axiosInstance = axios.create({
+  baseURL: '/' // Base URL for the proxy
+})
+
+// Request interceptor to log request config
+axiosInstance.interceptors.request.use(
+  (config) => {
+    console.log('Request Config:', config)
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+// Response interceptor to log response data
+axiosInstance.interceptors.response.use(
+  (response) => {
+    console.log('Response Data:', response.data)
+    return response
+  },
+  (error) => {
+    console.error('Response Error:', error.response)
+    return Promise.reject(error)
+  }
+)
+
 const fetchData = async () => {
   const accessKey = import.meta.env.VITE_RENTVINE_ACCESS_KEY
   const secretKey = import.meta.env.VITE_RENTVINE_SECRET_KEY
-  const apiURL = 'https://pmiaustin.rentvine.com/api/manager/owners/search'
+  const apiURL = '/api/manager/owners/search' // Use the proxy URL
 
   try {
-    //const response = await axios.get('https://pmiaustin.rentvine.com/api/manager/owners/search')
-    // const response = await axios.get('https://jsonplaceholder.typicode.com/users')
-    axios.interceptors.request.use(
-      function (config) {
-        // Do something before request is sent
-        console.log(config)
-        return config
-      },
-      function (error) {
-        // Do something with request error
-        return Promise.reject(error)
-      }
-    )
-
-    const response = await axios.get(apiURL, {
+    const response = await axiosInstance.get(apiURL, {
       auth: {
         username: accessKey,
         password: secretKey
@@ -76,8 +87,8 @@ const fetchData = async () => {
 
     console.log('Status:', response.status)
     console.log('Headers:', response.headers)
-    console.log('Response Data:', response.data)
 
+    // Set the response data to the reactive property
     items.value = response.data
   } catch (error) {
     console.error('There was an error!', error)
@@ -166,7 +177,7 @@ onMounted(() => {
   }
   .center-page {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 30vw 30vw;
     grid-template-rows: auto auto;
     grid-template-areas:
       'header header'
