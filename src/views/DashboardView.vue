@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from '../components/Header.vue'
+import LeasesExpiring from '../components/LeasesExpiring.vue'
 import axios from 'axios'
 
 import { ref, onMounted } from 'vue'
@@ -41,102 +42,18 @@ const list5 = [
 ]
 const list6 = ['Data entry', 'Property inspection and documentation']
 
-// Define reactive properties
-const items = ref([])
-const filteredItems = ref([])
-const expiredLeases = ref([])
-
-// Create Axios instance
-const axiosInstance = axios.create({
-  baseURL: '/' // Base URL for the proxy
-})
-
-// Request interceptor to log request config
-axiosInstance.interceptors.request.use(
-  (config) => {
-    console.log('Request Config:', config)
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
-
-// Response interceptor to log response data
-axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log('Response Data:', response.data)
-    return response
-  },
-  (error) => {
-    console.error('Response Error:', error.response)
-    return Promise.reject(error)
-  }
-)
-
-const fetchData = async () => {
-  const accessKey = import.meta.env.VITE_RENTVINE_ACCESS_KEY
-  const secretKey = import.meta.env.VITE_RENTVINE_SECRET_KEY
-  const baseURL = import.meta.env.VITE_BASE_URL
-  const apiURL = '/api/manager/leases' // Use the proxy URL
-
-  try {
-    const response = await axiosInstance.get(apiURL, {
-      baseURL: baseURL,
-      auth: {
-        username: accessKey,
-        password: secretKey
-      }
-    })
-
-    console.log('Status:', response.status)
-    console.log('Headers:', response.headers)
-
-    // Set the response data to the reactive property
-    items.value = response.data
-    filterData()
-    filterExpiredLeases()
-  } catch (error) {
-    console.error('There was an error!', error)
-  }
-}
-
-// Example start and end dates
-const startDate = new Date()
-const endDate = new Date()
-endDate.setDate(endDate.getDate() + 90)
-
-console.log('EndDate', endDate)
-
-// Filter data function
-const filterData = () => {
-  filteredItems.value = items.value.filter((item) => {
-    const itemDate = new Date(item.lease.endDate)
-    return itemDate >= startDate && itemDate <= endDate
-  })
-}
-
-// Filter data function
-const filterExpiredLeases = () => {
-  expiredLeases.value = items.value.filter((item) => {
-    const itemDate = new Date(item.lease.endDate)
-    // return itemDate >= startDate && itemDate <= endDate
-    return itemDate < startDate
-  })
-}
-
 // Create a reactive variable to track the button state
-const isClicked = ref(false)
-
+const expiringLeasesIsClicked = ref(false)
+const companyProcessesIsClicked = ref(false)
 // Function to toggle the button state
-const toggleClick = () => {
-  isClicked.value = !isClicked.value
+const expiringLeasesIsClickedToggle = () => {
+  expiringLeasesIsClicked.value = !expiringLeasesIsClicked.value
+  console.log('Button Click Value:', expiringLeasesIsClicked)
 }
-
-// Fetch data when the component is mounted
-onMounted(() => {
-  fetchData()
-})
+const companyProcessesIsClickedToggle = () => {
+  companyProcessesIsClicked.value = !companyProcessesIsClicked.value
+  console.log('Button Click Value:', expiringLeasesIsClicked)
+}
 </script>
 
 <template>
@@ -149,34 +66,32 @@ onMounted(() => {
         <div class="section-title">Leasing</div>
         <div class="buttons-list">
           <button
-            :class="{ 'is-clicked': isClicked, 'not-clicked': !isClicked }"
-            @click="toggleClick"
+            :class="{
+              'is-clicked': expiringLeasesIsClicked,
+              'not-clicked': !expiringLeasesIsClicked
+            }"
+            @click="expiringLeasesIsClickedToggle()"
           >
             View Expiring Leases
+          </button>
+          <button
+            :class="{
+              'is-clicked': companyProcessesIsClicked,
+              'not-clicked': !companyProcessesIsClicked
+            }"
+            @click="companyProcessesIsClickedToggle()"
+          >
+            View Company Processes
           </button>
         </div>
       </div>
 
       <div class="col2">
-        <div v-if="isClicked" class="col2-data">
-          <div class="title">Expiring in Next 90 Days</div>
-          <div class="test-output">
-            <!-- <div class="list-header">API Data</div> -->
-            <ol>
-              <li v-for="item in filteredItems" :key="item.id">
-                {{ item.unit.streetNumber }} {{ item.unit.streetName }} ({{ item.lease.endDate }})
-              </li>
-            </ol>
-          </div>
-          <div class="title2">Expired Leases</div>
-          <div class="test-output">
-            <!-- <div class="list-header">API Data</div> -->
-            <ol>
-              <li v-for="item in expiredLeases" :key="item.id">
-                {{ item.unit.streetNumber }} {{ item.unit.streetName }} ({{ item.lease.endDate }})
-              </li>
-            </ol>
-          </div>
+        <div v-if="expiringLeasesIsClicked" class="col2-data">
+          <LeasesExpiring class="header"></LeasesExpiring>
+        </div>
+        <div v-if="companyProcessesIsClicked" class="col2-data">
+          <div class="title">Company Procesess</div>
         </div>
       </div>
     </div>

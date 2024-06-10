@@ -12,16 +12,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://pmiaustin.rentvine.com/', // The backend server
-        changeOrigin: true, // Needed for virtual hosted sites
-        secure: false // If the backend server uses self-signed SSL certificates
-        // This rewrite (path) must not be used since the actual real url as '/api' in it
-        // rewrite: (path) => path.replace(/^\/api/, '') // Remove /api from the URL path
-      }
-    }
   }
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://pmiaustin.rentvine.com/', // The backend server
+  //       changeOrigin: true, // Needed for virtual hosted sites
+  //       secure: false // If the backend server uses self-signed SSL certificates
+  //       // This rewrite (path) must not be used since the actual real url as '/api' in it
+  //       // rewrite: (path) => path.replace(/^\/api/, '') // Remove /api from the URL path
+  //     }
+  //   }
+  // }
 })
